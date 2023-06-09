@@ -1,0 +1,38 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: its4u-dropbox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: its4u-dropbox-app
+  template:
+    metadata:
+      labels:
+        app: its4u-dropbox-app
+    spec:
+      containers:
+        - name: its4u-dropbox-quarkus
+          image: its4u-dropbox:latest
+          ports:
+            - name: http
+              containerPort: 8081
+              protocol: TCP
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "10m"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: its4u-dropbox-svc
+spec:
+ports:
+  - name: http-8081
+    port: 8081
+    protocol: TCP
+    targetPort: 8081
+selector:
+  app: its4u-dropbox-app
